@@ -2,6 +2,7 @@ import cors from 'cors';
 import express from 'express';
 import router from './routes';
 import errorHandler from '@shared/errors/ErrorHandler';
+import '@shared/typeorm/index';
 
 function setupServer(): void {
   const app = express();
