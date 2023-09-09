@@ -6,7 +6,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node build/server.js",
-    "start:dev": "tsnd --respawn --transpile-only src/server.ts",
+    "start:dev": "tsnd --respawn tsconfig-paths/register --transpile-only src/server.ts",
     "lint": "eslint . --ext .ts",
     "lint:fix": "eslint . --ext .ts --fix"
   },
