@@ -1,0 +1,9 @@
+version: '3'
+services:
+  postgres:
+    image: postgres:16rc1-alpine3.18
+    environment:
+      POSTGRES_PASSWORD: docker
+      POSTGRES_DB: salesapi
+    ports:
+      - '5432:5432'
