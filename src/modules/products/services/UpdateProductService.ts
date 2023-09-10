@@ -22,7 +22,7 @@ export class UpdateProductService {
     const showProductService = new ShowProductService();
     const product = await showProductService.execute({ productId });
     const productAlreadyExists = await productRepository.findByName(name);
-    const hasEqualName = product.name !== name;
+    const hasEqualName = product.name === name;
 
     if (productAlreadyExists && !hasEqualName) {
       throw new AppError(`Product with name ${name} already exists`);
