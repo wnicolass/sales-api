@@ -7,7 +7,7 @@ interface IProductRequest {
   productId: string;
 }
 
-export class ShowProductsService {
+export class ShowProductService {
   public async execute({ productId }: IProductRequest): Promise<Product> {
     const productRepository = getCustomRepository(ProductRepository);
     const product = await productRepository.findOne({
