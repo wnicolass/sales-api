@@ -1,5 +1,6 @@
 import { getCustomRepository } from 'typeorm';
 import { ProductRepository } from '../typeorm/repositories/ProductRepository';
+import { update } from '@shared/typeorm/helpers/update';
 import { Product } from '../typeorm/entities/Product';
 import { AppError } from '@shared/errors/AppError';
 import { ShowProductService } from './ShowProductService';
@@ -28,7 +29,8 @@ export class UpdateProductService {
       throw new AppError(`Product with name ${name} already exists`);
     }
 
-    await productRepository.update(productId, { name, price, quantity });
+    const updatedProduct = update(product, { name, price, quantity });
+    await productRepository.save(updatedProduct);
 
     return product;
   }
