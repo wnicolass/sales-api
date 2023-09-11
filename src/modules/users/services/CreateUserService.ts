@@ -4,13 +4,17 @@ import { User } from '../typeorm/entities/User';
 import { UserRepository } from '../typeorm/repositories/UserRepository';
 
 interface IUserRequest {
-  name: string;
+  username: string;
   email: string;
   password: string;
 }
 
 export class CreateUserService {
-  public async execute({ name, email, password }: IUserRequest): Promise<User> {
+  public async execute({
+    username,
+    email,
+    password,
+  }: IUserRequest): Promise<User> {
     const userRepository = getCustomRepository(UserRepository);
     const emailAlreadyExists = !!(await userRepository.findByEmail(email));
 
@@ -18,7 +22,7 @@ export class CreateUserService {
       throw new AppError(`Email "${email}" already in use`);
     }
 
-    const newUser = userRepository.create({ name, email, password });
+    const newUser = userRepository.create({ username, email, password });
     await userRepository.save(newUser);
 
     return newUser;
