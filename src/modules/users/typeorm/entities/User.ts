@@ -1,4 +1,7 @@
+import { getRounds, hash } from 'bcrypt';
 import {
+  BeforeInsert,
+  BeforeUpdate,
   Column,
   CreateDateColumn,
   Entity,
@@ -28,4 +31,14 @@ export class User {
 
   @UpdateDateColumn()
   updated_at: Date;
+
+  @BeforeInsert()
+  @BeforeUpdate()
+  public async hashPassword(): Promise<void> {
+    try {
+      !!getRounds(this.password);
+    } catch (err) {
+      this.password = await hash(this.password, 10);
+    }
+  }
 }
