@@ -1,12 +1,14 @@
 import { Router } from 'express';
 import { celebrate, Joi, Segments } from 'celebrate';
 import { UserController } from '../controllers/UserController';
+import { AuthValidator } from '../../../shared/http/middlewares/AuthValidator';
 
 function setupUserRoutes(): Router {
   const router = Router();
   const userController = new UserController();
+  const auth = new AuthValidator();
 
-  router.get('/', userController.index);
+  router.get('/', auth.validate, userController.index);
   router.post(
     '/',
     celebrate({
