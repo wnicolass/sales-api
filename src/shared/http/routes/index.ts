@@ -1,11 +1,8 @@
 import { Router } from 'express';
+import { productsRouter } from '@modules/products/routes/products.routes';
 
 const router = Router();
 
-router.get('/', (request, response) => {
-  return response.status(200).json({
-    message: 'Sanity check',
-  });
-});
+router.use('/products', productsRouter);
 
 export default router;
