@@ -18,7 +18,11 @@ export class AuthValidator {
     const [, token] = authorization.split(/\s/);
 
     try {
-      const decodedToken = verify(token, tokenConfig.secret);
+      const { sub } = verify(token, tokenConfig.secret);
+
+      request.user = {
+        userId: sub as string,
+      };
 
       return next();
     } catch (err: unknown) {
