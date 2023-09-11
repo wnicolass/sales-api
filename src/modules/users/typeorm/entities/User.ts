@@ -36,7 +36,7 @@ export class User {
   @BeforeUpdate()
   public async hashPassword(): Promise<void> {
     try {
-      !!getRounds(this.password);
+      getRounds(this.password);
     } catch (err) {
       this.password = await hash(this.password, 10);
     }
