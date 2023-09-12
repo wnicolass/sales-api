@@ -1,14 +1,25 @@
+import multer from 'multer';
 import { Router } from 'express';
 import { celebrate, Joi, Segments } from 'celebrate';
-import { UserController } from '../controllers/UserController';
+import { multerConfig } from '@config/fileUpload';
 import { AuthValidator } from '../../../shared/http/middlewares/AuthValidator';
+import { UserController } from '../controllers/UserController';
+import { UserAvatarController } from '../controllers/UserAvatarController';
 
 function setupUserRoutes(): Router {
   const router = Router();
   const userController = new UserController();
+  const userAvatarController = new UserAvatarController();
   const auth = new AuthValidator();
+  const upload = multer(multerConfig);
 
   router.get('/', auth.validate, userController.index);
+  router.patch(
+    '/avatar',
+    auth.validate,
+    upload.single('avatar'),
+    userAvatarController.update,
+  );
   router.post(
     '/',
     celebrate({

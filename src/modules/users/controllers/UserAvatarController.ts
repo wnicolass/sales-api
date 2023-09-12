@@ -6,7 +6,7 @@ export class UserAvatarController {
     const { userId } = request.user;
     const { filename } = request.file!;
     const updateAvatar = new UpdateUserAvatarService();
-    const user = updateAvatar.execute({ userId, filename });
+    const user = await updateAvatar.execute({ userId, filename });
 
     return response.status(200).json(user);
   }
