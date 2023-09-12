@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 import { ResetPasswordService } from '../services/ResetPasswordService';
 
-export class ForgotPasswordController {
+export class ResetPasswordController {
   public async create(request: Request, response: Response): Promise<Response> {
     const { token, password } = request.body;
     const resetPassword = new ResetPasswordService();
