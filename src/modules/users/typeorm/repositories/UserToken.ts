@@ -7,7 +7,7 @@ export class UserTokenRepository extends Repository<UserToken> {
     return await this.findOne({ where: { token } });
   }
 
-  public async generate(userId: string): Promise<UserToken | undefined> {
+  public async generate(userId: string): Promise<UserToken> {
     const userToken = this.create({ user_id: userId });
     return await this.save(userToken);
   }
