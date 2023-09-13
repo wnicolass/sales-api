@@ -7,7 +7,7 @@ import { update } from '@shared/typeorm/helpers/update';
 
 interface IProfileRequest {
   userId: string;
-  username: string;
+  username?: string;
   email: string;
   password?: string;
   oldPassword?: string;
