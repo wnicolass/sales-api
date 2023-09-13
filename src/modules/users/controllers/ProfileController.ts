@@ -11,7 +11,7 @@ export class ProfileController {
   }
 
   public async update(request: Request, response: Response): Promise<Response> {
-    const { userId } = request.body;
+    const { userId } = request.user;
     const { username, email, password, oldPassword } = request.body;
     const updateProfile = new UpdateProfileService();
     const user = await updateProfile.execute({
