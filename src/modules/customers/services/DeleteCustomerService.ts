@@ -9,8 +9,8 @@ interface ICustomerRequest {
 export class DeleteCustomerService {
   public async execute({ customerId }: ICustomerRequest): Promise<void> {
     const customerRepository = getCustomRepository(CustomerRepository);
-    const showProductService = new ShowCustomerService();
-    const customer = await showProductService.execute({ customerId });
+    const showCustomerService = new ShowCustomerService();
+    const customer = await showCustomerService.execute({ customerId });
 
     await customerRepository.remove(customer);
 
