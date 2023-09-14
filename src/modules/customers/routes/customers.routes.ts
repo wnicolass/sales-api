@@ -1,11 +1,14 @@
 import { Router } from 'express';
 import { celebrate, Joi, Segments } from 'celebrate';
 import { CustomerController } from '../controllers/CustomerController';
+import { AuthValidator } from '@shared/http/middlewares/AuthValidator';
 
 function setupCustomerRouter(): Router {
   const router = Router();
   const customerController = new CustomerController();
+  const auth = new AuthValidator();
 
+  router.use(auth.validate);
   router.get('/', customerController.index);
   router.get(
     '/:customerId',
