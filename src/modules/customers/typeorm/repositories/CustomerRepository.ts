@@ -7,8 +7,8 @@ export class CustomerRepository extends Repository<Customer> {
     return await this.findOne({ where: { username } });
   }
 
-  public async findById(userId: string): Promise<Customer | undefined> {
-    return await this.findOne({ where: { user_id: userId } });
+  public async findById(customerId: string): Promise<Customer | undefined> {
+    return await this.findOne({ where: { customer_id: customerId } });
   }
 
   public async findByEmail(email: string): Promise<Customer | undefined> {
