@@ -10,7 +10,7 @@ interface ICustomerRequest {
   email: string;
 }
 
-export class UpdateProfileService {
+export class UpdateCustomerService {
   public async execute({
     customerId,
     username,

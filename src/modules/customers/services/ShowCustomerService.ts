@@ -7,7 +7,7 @@ interface ICustomerRequest {
   customerId: string;
 }
 
-export class ShowProfileService {
+export class ShowCustomerService {
   public async execute({ customerId }: ICustomerRequest): Promise<Customer> {
     const customerRepository = getCustomRepository(CustomerRepository);
     const customer = await customerRepository.findById(customerId);
