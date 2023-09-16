@@ -2,7 +2,7 @@ import { Request, Response } from 'express';
 import { ShowOrderService } from '../services/ShowOrderService';
 import { CreateOrderService } from '../services/CreateOrderService';
 
-export class ProductController {
+export class OrderController {
   public async show(request: Request, response: Response): Promise<Response> {
     const { orderId } = request.params;
     const showOrder = new ShowOrderService();
