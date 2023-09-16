@@ -1,11 +1,14 @@
 import { Router } from 'express';
 import { celebrate, Joi, Segments } from 'celebrate';
+import { AuthValidator } from '@shared/http/middlewares/AuthValidator';
 import { OrderController } from '../controllers/OrderController';
 
 function setupOrdersRouter(): Router {
   const router = Router();
   const orderController = new OrderController();
+  const auth = new AuthValidator();
 
+  router.use(auth.validate);
   router.get(
     '/:orderId',
     celebrate({
