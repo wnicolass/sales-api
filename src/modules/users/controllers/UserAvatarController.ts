@@ -1,4 +1,5 @@
 import { Request, Response } from 'express';
+import { instanceToInstance } from 'class-transformer';
 import { UpdateUserAvatarService } from '../services/UpdateUserAvatarService';
 
 export class UserAvatarController {
@@ -8,6 +9,6 @@ export class UserAvatarController {
     const updateAvatar = new UpdateUserAvatarService();
     const user = await updateAvatar.execute({ userId, filename });
 
-    return response.status(200).json(user);
+    return response.status(200).json(instanceToInstance(user));
   }
 }

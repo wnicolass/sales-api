@@ -3,6 +3,7 @@ import 'express-async-errors';
 import 'dotenv/config';
 import cors from 'cors';
 import express from 'express';
+import { pagination } from 'typeorm-pagination';
 import router from './routes';
 import errorHandler from '@shared/errors/ErrorHandler';
 import { errors } from 'celebrate';
@@ -15,6 +16,7 @@ function setupServer(): void {
 
   app.use(cors());
   app.use(express.json());
+  app.use(pagination);
   app.use('/files', express.static(multerConfig.directory));
   app.use(router);
   app.use(errors());

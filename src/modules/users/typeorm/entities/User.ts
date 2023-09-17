@@ -1,4 +1,5 @@
 import { getRounds, hash } from 'bcrypt';
+import { Exclude, Expose } from 'class-transformer';
 import {
   BeforeInsert,
   BeforeUpdate,
@@ -21,6 +22,7 @@ export class User {
   email: string;
 
   @Column()
+  @Exclude()
   password: string;
 
   @Column()
@@ -40,5 +42,14 @@ export class User {
     } catch (err) {
       this.password = await hash(this.password, 10);
     }
+  }
+
+  @Expose({ name: 'avatar_url' })
+  getAvatarUrl(): string | null {
+    if (!this.avatar) {
+      return null;
+    }
+
+    return `${process.env.APP_URL}:${process.env.PORT}/files/${this.avatar}`;
   }
 }
