@@ -9,6 +9,7 @@ import errorHandler from '@shared/errors/ErrorHandler';
 import { errors } from 'celebrate';
 import '@shared/typeorm/index';
 import { multerConfig } from '@config/fileUpload';
+import { rateLimiter } from './middlewares/RateLimiter';
 
 function setupServer(): void {
   const app = express();
@@ -16,6 +17,7 @@ function setupServer(): void {
 
   app.use(cors());
   app.use(express.json());
+  app.use(rateLimiter.limit);
   app.use(pagination);
   app.use('/files', express.static(multerConfig.directory));
   app.use(router);
