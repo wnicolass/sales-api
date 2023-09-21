@@ -1,12 +1,9 @@
 import { getCustomRepository } from 'typeorm';
-import { join } from 'node:path';
-import { unlink } from 'node:fs/promises';
-import { existsSync } from 'node:fs';
 import { User } from '../typeorm/entities/User';
 import { update } from '@shared/typeorm/helpers/update';
 import { AppError } from '@shared/errors/AppError';
-import { multerConfig } from '@config/fileUpload';
 import { UserRepository } from '../typeorm/repositories/UserRepository';
+import { DiskStorageProvider } from '@shared/providers/storage-provider/DiskStorageProvider';
 
 interface IUserRequest {
   userId: string;
@@ -17,21 +14,18 @@ export class UpdateUserAvatarService {
   public async execute({ userId, filename }: IUserRequest): Promise<User> {
     const userRepository = getCustomRepository(UserRepository);
     const user = await userRepository.findById(userId);
+    const storageProvider = new DiskStorageProvider();
 
     if (!user) {
       throw new AppError('User not found', 404);
     }
 
     if (user.avatar) {
-      const userAvatarFilePath = join(multerConfig.directory, user.avatar);
-      const avatarPathExists = existsSync(userAvatarFilePath);
-
-      if (avatarPathExists) {
-        await unlink(userAvatarFilePath);
-      }
+      await storageProvider.deleteFile(user.avatar);
     }
 
-    update(user, { avatar: filename });
+    const avatarFilename = await storageProvider.saveFile(filename);
+    update(user, { avatar: avatarFilename });
     await userRepository.save(user);
 
     return user;
