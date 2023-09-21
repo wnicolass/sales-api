@@ -1,5 +1,6 @@
 import nodemailer from 'nodemailer';
-import aws from 'aws-sdk';
+import { defaultProvider } from '@aws-sdk/credential-provider-node';
+import { SES, SendRawEmailCommand } from '@aws-sdk/client-ses';
 import {
   HandlebarsMailTemplate,
   IParseMailTemplate,
@@ -26,9 +27,14 @@ export class SESMail {
     templateData,
   }: IMessage): Promise<void> {
     const transporter = nodemailer.createTransport({
-      SES: new aws.SES({
-        apiVersion: 'latest',
-      }),
+      SES: {
+        ses: new SES({
+          apiVersion: 'latest',
+          region: process.env.AWS_REGION,
+          credentialDefaultProvider: defaultProvider,
+        }),
+        aws: { SendRawEmailCommand },
+      },
     });
 
     const { email, name } = mailConfig.defaults.from;
