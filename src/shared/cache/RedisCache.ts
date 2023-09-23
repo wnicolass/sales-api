@@ -1,19 +1,25 @@
-import Redis, { Redis as RedisClient } from 'ioredis';
+import Redis from 'ioredis';
 import { redisConfig } from '@config/cache';
 
-export class RedisCache {
-  private client: RedisClient;
+export class RedisCacheSingleton {
+  private static _client: RedisCacheSingleton | null = null;
+  private redisClient = new Redis(redisConfig.redis);
 
-  constructor() {
-    this.client = new Redis(redisConfig.redis);
+  private constructor() {}
+
+  public static get client(): RedisCacheSingleton {
+    if (!RedisCacheSingleton._client) {
+      RedisCacheSingleton._client = new RedisCacheSingleton();
+    }
+    return RedisCacheSingleton._client;
   }
 
   public async save(key: string, value: unknown): Promise<void> {
-    await this.client.set(key, JSON.stringify(value));
+    await this.redisClient.set(key, JSON.stringify(value));
   }
 
   public async recover<T>(key: string): Promise<T | null> {
-    const cachedProducts = await this.client.get(key);
+    const cachedProducts = await this.redisClient.get(key);
 
     if (!cachedProducts) {
       return null;
@@ -23,6 +29,6 @@ export class RedisCache {
   }
 
   public async invalidate(key: string): Promise<void> {
-    await this.client.del(key);
+    await this.redisClient.del(key);
   }
 }
