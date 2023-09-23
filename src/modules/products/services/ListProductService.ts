@@ -1,12 +1,12 @@
 import { getCustomRepository } from 'typeorm';
 import { ProductRepository } from '../typeorm/repositories/ProductRepository';
 import { Product } from '../typeorm/entities/Product';
-import { RedisCache } from '@shared/cache/RedisCache';
+import { RedisCacheSingleton } from '@shared/cache/RedisCache';
 
 export class ListProductsService {
   public async execute(): Promise<Product[]> {
     const productRepository = getCustomRepository(ProductRepository);
-    const redisCache = new RedisCache();
+    const redisCache = RedisCacheSingleton.client;
     let products = await redisCache.recover<Product[]>('sales-api:products');
 
     if (!products) {

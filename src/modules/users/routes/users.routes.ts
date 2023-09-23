@@ -11,7 +11,7 @@ function setupUserRoutes(): Router {
   const userController = new UserController();
   const userAvatarController = new UserAvatarController();
   const auth = new AuthValidator();
-  const upload = multer(multerConfig);
+  const upload = multer(multerConfig.multer);
 
   router.get('/', auth.validate, userController.index);
   router.patch(

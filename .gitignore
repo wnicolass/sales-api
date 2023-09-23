@@ -146,7 +146,7 @@ dist
 # Uploads
 uploads/*
 !uploads/.gitkeep
-
+temp/
 
 # db
 ormconfig.json

@@ -4,7 +4,7 @@ import { update } from '@shared/typeorm/helpers/update';
 import { Product } from '../typeorm/entities/Product';
 import { AppError } from '@shared/errors/AppError';
 import { ShowProductService } from './ShowProductService';
-import { RedisCache } from '@shared/cache/RedisCache';
+import { RedisCacheSingleton } from '@shared/cache/RedisCache';
 
 interface IProductRequest {
   productId: string;
@@ -30,7 +30,7 @@ export class UpdateProductService {
       throw new AppError(`Product with name ${name} already exists`);
     }
 
-    const redisCache = new RedisCache();
+    const redisCache = RedisCacheSingleton.client;
     await redisCache.invalidate('sales-api:products');
 
     const updatedProduct = update(product, { name, price, quantity });
