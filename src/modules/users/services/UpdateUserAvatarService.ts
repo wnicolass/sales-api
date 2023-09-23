@@ -4,6 +4,7 @@ import { update } from '@shared/typeorm/helpers/update';
 import { AppError } from '@shared/errors/AppError';
 import { UserRepository } from '../typeorm/repositories/UserRepository';
 import { DiskStorageProvider } from '@shared/providers/storage-provider/DiskStorageProvider';
+import { S3StorageProvider } from '@shared/providers/storage-provider/S3StorageProvider';
 
 interface IUserRequest {
   userId: string;
@@ -14,7 +15,11 @@ export class UpdateUserAvatarService {
   public async execute({ userId, filename }: IUserRequest): Promise<User> {
     const userRepository = getCustomRepository(UserRepository);
     const user = await userRepository.findById(userId);
-    const storageProvider = new DiskStorageProvider();
+    const StorageDriver =
+      process.env.STORAGE_DRIVER === 's3'
+        ? S3StorageProvider
+        : DiskStorageProvider;
+    const storageProvider = new StorageDriver();
 
     if (!user) {
       throw new AppError('User not found', 404);
