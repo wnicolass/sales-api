@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import { celebrate, Joi, Segments } from 'celebrate';
 import { CustomerController } from '../controllers/CustomerController';
-import { AuthValidator } from '@shared/http/middlewares/AuthValidator';
+import { AuthValidator } from '@shared/infra/http/middlewares/AuthValidator';
 
 function setupCustomerRouter(): Router {
   const router = Router();

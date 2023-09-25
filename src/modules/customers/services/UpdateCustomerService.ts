@@ -1,8 +1,8 @@
 import { getCustomRepository } from 'typeorm';
-import { update } from '@shared/typeorm/helpers/update';
+import { update } from '@shared/infra/typeorm/helpers/update';
 import { AppError } from '@shared/errors/AppError';
-import { Customer } from '../typeorm/entities/Customer';
-import { CustomerRepository } from '../typeorm/repositories/CustomerRepository';
+import { Customer } from '../infra/typeorm/entities/Customer';
+import { CustomerRepository } from '../infra/typeorm/repositories/CustomerRepository';
 
 interface ICustomerRequest {
   customerId: string;
