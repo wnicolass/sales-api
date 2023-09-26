@@ -2,7 +2,7 @@ import multer from 'multer';
 import { Router } from 'express';
 import { celebrate, Joi, Segments } from 'celebrate';
 import { multerConfig } from '@config/fileUpload';
-import { AuthValidator } from '../../../shared/http/middlewares/AuthValidator';
+import { AuthValidator } from '../../../../../shared/infra/http/middlewares/AuthValidator';
 import { UserController } from '../controllers/UserController';
 import { UserAvatarController } from '../controllers/UserAvatarController';
 
