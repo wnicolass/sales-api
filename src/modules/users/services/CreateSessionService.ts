@@ -1,10 +1,10 @@
 import { sign } from 'jsonwebtoken';
 import { compare } from 'bcrypt';
 import { getCustomRepository } from 'typeorm';
-import { User } from '../typeorm/entities/User';
+import { User } from '../infra/typeorm/entities/User';
 import { AppError } from '@shared/errors/AppError';
 import { tokenConfig } from '@config/token';
-import { UserRepository } from '../typeorm/repositories/UserRepository';
+import { UserRepository } from '../infra/typeorm/repositories/UserRepository';
 
 interface IUserRequest {
   email: string;

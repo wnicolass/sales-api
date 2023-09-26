@@ -1,9 +1,9 @@
 import { getCustomRepository } from 'typeorm';
 import { isAfter, addHours } from 'date-fns';
 import { AppError } from '@shared/errors/AppError';
-import { UserRepository } from '../typeorm/repositories/UserRepository';
-import { UserTokenRepository } from '../typeorm/repositories/UserToken';
-import { update } from '@shared/typeorm/helpers/update';
+import { UserRepository } from '../infra/typeorm/repositories/UserRepository';
+import { UserTokenRepository } from '../infra/typeorm/repositories/UserToken';
+import { update } from '@shared/infra/typeorm/helpers/update';
 
 interface IUserTokenRequest {
   token: string;
