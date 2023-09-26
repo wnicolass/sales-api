@@ -1,4 +1,4 @@
-# Sales API
+# 💸 Sales API
 
 ## 🚀 Getting Started
 

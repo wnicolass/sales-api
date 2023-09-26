@@ -4,8 +4,8 @@ import { SESMail } from '@config/mail/SESMail';
 import { AppError } from '@shared/errors/AppError';
 import { mailConfig } from '@config/mail/mail';
 import { EtherealMail } from '@config/mail/EtherealMail';
-import { UserRepository } from '../typeorm/repositories/UserRepository';
-import { UserTokenRepository } from '../typeorm/repositories/UserToken';
+import { UserRepository } from '../infra/typeorm/repositories/UserRepository';
+import { UserTokenRepository } from '../infra/typeorm/repositories/UserToken';
 
 interface IUserTokenRequest {
   email: string;
