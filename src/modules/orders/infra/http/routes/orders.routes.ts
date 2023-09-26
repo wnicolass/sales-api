@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import { celebrate, Joi, Segments } from 'celebrate';
-import { AuthValidator } from '@shared/http/middlewares/AuthValidator';
+import { AuthValidator } from '@shared/infra/http/middlewares/AuthValidator';
 import { OrderController } from '../controllers/OrderController';
 
 function setupOrdersRouter(): Router {
