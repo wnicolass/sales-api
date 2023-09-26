@@ -1,28 +1,25 @@
-import { getCustomRepository } from 'typeorm';
+import { injectable, inject } from 'tsyringe';
 import { AppError } from '@shared/errors/AppError';
-import { Customer } from '../infra/typeorm/entities/Customer';
-import { CustomerRepository } from '../infra/typeorm/repositories/CustomerRepository';
+import { ICustomer } from '../domain/interfaces/ICustomer';
+import { ICreateCustomer } from '../domain/interfaces/ICreateCustomer';
+import { ICustomerRepository } from '../domain/interfaces/ICustomerRepository';
 
-interface ICustomerRequest {
-  username: string;
-  email: string;
-}
-
+@injectable()
 export class CreateCustomerService {
+  constructor(
+    @inject('CustomerRepository') private repository: ICustomerRepository,
+  ) {}
+
   public async execute({
     username,
     email,
-  }: ICustomerRequest): Promise<Customer> {
-    const customerRepository = getCustomRepository(CustomerRepository);
-    const emailAlreadyExists = !!(await customerRepository.findByEmail(email));
+  }: ICreateCustomer): Promise<ICustomer> {
+    const emailAlreadyExists = !!(await this.repository.findByEmail(email));
 
     if (emailAlreadyExists) {
       throw new AppError(`Email "${email}" already in use`);
     }
 
-    const newCustomer = customerRepository.create({ username, email });
-    await customerRepository.save(newCustomer);
-
-    return newCustomer;
+    return await this.repository.create({ username, email });
   }
 }

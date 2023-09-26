@@ -1,3 +1,4 @@
+import { container } from 'tsyringe';
 import { Request, Response } from 'express';
 import { ListCustomerService } from '../../../services/ListCustomerService';
 import { ShowCustomerService } from '../../../services/ShowCustomerService';
@@ -23,7 +24,7 @@ export class CustomerController {
 
   public async create(request: Request, response: Response): Promise<Response> {
     const { username, email } = request.body;
-    const createCustomer = new CreateCustomerService();
+    const createCustomer = container.resolve(CreateCustomerService);
     const newCustomer = await createCustomer.execute({ username, email });
 
     return response.status(201).json(newCustomer);
