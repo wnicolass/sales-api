@@ -1,8 +1,12 @@
 import { getRepository, Repository } from 'typeorm';
 import { Customer } from '../entities/Customer';
-import { ICustomerRepository } from '@modules/customers/domain/interfaces/ICustomerRepository';
+import {
+  FindParams,
+  ICustomerRepository,
+} from '@modules/customers/domain/interfaces/ICustomerRepository';
 import { ICustomer } from '@modules/customers/domain/interfaces/ICustomer';
 import { ICreateCustomer } from '@modules/customers/domain/interfaces/ICreateCustomer';
+import { ICustomerPagination } from '@modules/customers/domain/interfaces/ICustomerPagination';
 
 export class CustomerRepository implements ICustomerRepository {
   constructor(
@@ -18,6 +22,25 @@ export class CustomerRepository implements ICustomerRepository {
   public async save(customer: ICustomer): Promise<Customer> {
     await this.ormRepo.save(customer);
     return customer;
+  }
+
+  public async findAll({
+    page,
+    skip,
+    take,
+  }: FindParams): Promise<ICustomerPagination> {
+    const [customers, count] = await this.ormRepo
+      .createQueryBuilder()
+      .skip(skip)
+      .take(take)
+      .getManyAndCount();
+
+    return {
+      per_page: take,
+      total: count,
+      current_page: page,
+      data: customers,
+    };
   }
 
   public async findByUsername(username: string): Promise<Customer | undefined> {
