@@ -8,8 +8,12 @@ import { DeleteCustomerService } from '../../../services/DeleteCustomerService';
 
 export class CustomerController {
   public async index(request: Request, response: Response): Promise<Response> {
-    const listCustomers = new ListCustomerService();
-    const customers = await listCustomers.execute();
+    const { page, limit } = request.query;
+    const listCustomers = container.resolve(ListCustomerService);
+    const customers = await listCustomers.execute({
+      page: page ? +page : 1,
+      limit: limit ? +limit : 15,
+    });
 
     return response.status(200).json(customers);
   }
