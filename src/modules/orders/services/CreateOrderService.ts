@@ -58,9 +58,9 @@ export class CreateOrderService {
     const productsWithPrice = products.map((product) => ({
       product_id: product.product_id,
       quantity: product.quantity,
-      price: productsFound.filter(
+      price: productsFound.find(
         (inStockProduct) => inStockProduct.product_id === product.product_id,
-      )[0].price,
+      )!.price,
     }));
 
     const order = await this.orderRepository.create({
