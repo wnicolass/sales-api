@@ -1,4 +1,3 @@
-import { Customer } from '@modules/customers/infra/typeorm/entities/Customer';
 import {
   CreateDateColumn,
   Entity,
@@ -8,10 +7,12 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
+import { IOrder } from '@modules/orders/domain/IOrder';
+import { Customer } from '@modules/customers/infra/typeorm/entities/Customer';
 import { OrderProduct } from './OrderProduct';
 
 @Entity('order')
-export class Order {
+export class Order implements IOrder {
   @PrimaryGeneratedColumn('uuid')
   order_id: string;
 
