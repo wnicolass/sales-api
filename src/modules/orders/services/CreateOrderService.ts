@@ -71,10 +71,10 @@ export class CreateOrderService {
     const { order_products: orderProducts } = order;
 
     const productsWithUpdatedQuantity = orderProducts.map((orderProduct) => ({
-      product_id: orderProduct.product.product_id,
+      product_id: orderProduct.product_id,
       quantity:
         productsFound.find(
-          (product) => product.product_id === orderProduct.product.product_id,
+          (product) => product.product_id === orderProduct.product_id,
         )!.quantity - orderProduct.quantity,
     }));
 
