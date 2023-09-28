@@ -1,11 +1,9 @@
 import { getRepository, Repository } from 'typeorm';
 import { Customer } from '../entities/Customer';
-import {
-  FindParams,
-  ICustomerRepository,
-} from '@modules/customers/domain/interfaces/ICustomerRepository';
 import { ICustomer } from '@modules/customers/domain/interfaces/ICustomer';
 import { ICreateCustomer } from '@modules/customers/domain/interfaces/ICreateCustomer';
+import { IPaginationParams } from '@shared/interfaces/IPaginationParams';
+import { ICustomerRepository } from '@modules/customers/domain/interfaces/ICustomerRepository';
 import { ICustomerPagination } from '@modules/customers/domain/interfaces/ICustomerPagination';
 
 export class CustomerRepository implements ICustomerRepository {
@@ -28,7 +26,7 @@ export class CustomerRepository implements ICustomerRepository {
     page,
     skip,
     take,
-  }: FindParams): Promise<ICustomerPagination> {
+  }: IPaginationParams): Promise<ICustomerPagination> {
     const [customers, count] = await this.ormRepo
       .createQueryBuilder()
       .skip(skip)
