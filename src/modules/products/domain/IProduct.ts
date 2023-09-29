@@ -1,4 +1,4 @@
-import { IOrderProduct } from '@modules/orders/domain/IOrderProduct';
+import { IOrderProduct } from '@modules/orders/domain/interfaces/IOrderProduct';
 
 export interface IProduct {
   product_id: string;
