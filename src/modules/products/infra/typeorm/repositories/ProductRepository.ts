@@ -1,12 +1,13 @@
 import { In, Repository, getRepository } from 'typeorm';
 import { Product } from '../entities/Product';
-import { IProduct } from '@modules/products/domain/IProduct';
+import { IProduct } from '@modules/products/domain/interfaces/IProduct';
 import { IPagination } from '@shared/interfaces/IPagination';
 import { IPaginationParams } from '@shared/interfaces/IPaginationParams';
+import { ICreateProductRequest } from '@modules/products/domain/interfaces/ICreateProductRequest';
 import {
   IProductRepository,
   IUpdateStockProduct,
-} from '@modules/products/domain/IProductRepository';
+} from '@modules/products/domain/interfaces/IProductRepository';
 
 export class ProductRepository implements IProductRepository {
   constructor(private ormRepo: Repository<Product> = getRepository(Product)) {}
@@ -47,6 +48,16 @@ export class ProductRepository implements IProductRepository {
     });
 
     return existingProducts;
+  }
+
+  public async create({
+    name,
+    price,
+    quantity,
+  }: ICreateProductRequest): Promise<Product> {
+    const product = this.ormRepo.create({ name, price, quantity });
+
+    return product;
   }
 
   public async save(product: IProduct): Promise<Product> {
