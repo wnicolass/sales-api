@@ -1,7 +1,7 @@
 import { inject, injectable } from 'tsyringe';
 import { update } from '@shared/infra/typeorm/helpers/update';
 import { AppError } from '@shared/errors/AppError';
-import { Customer } from '../infra/typeorm/entities/Customer';
+import { ICustomer } from '../domain/interfaces/ICustomer';
 import { ICustomerRepository } from '../domain/interfaces/ICustomerRepository';
 import { IUpdateCustomerRequest } from '../domain/interfaces/IUpdateCustomerRequest';
 
@@ -16,7 +16,7 @@ export class UpdateCustomerService {
     customerId,
     username,
     email,
-  }: IUpdateCustomerRequest): Promise<Customer> {
+  }: IUpdateCustomerRequest): Promise<ICustomer> {
     const customer = await this.customerRepository.findById(customerId);
 
     if (!customer) {
