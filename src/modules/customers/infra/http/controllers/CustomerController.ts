@@ -20,7 +20,7 @@ export class CustomerController {
 
   public async show(request: Request, response: Response): Promise<Response> {
     const { customerId } = request.params;
-    const showCustomer = new ShowCustomerService();
+    const showCustomer = container.resolve(ShowCustomerService);
     const customer = await showCustomer.execute({ customerId });
 
     return response.status(200).json(customer);
@@ -37,7 +37,7 @@ export class CustomerController {
   public async update(request: Request, response: Response): Promise<Response> {
     const { username, email } = request.body;
     const { customerId } = request.params;
-    const updateCustomer = new UpdateCustomerService();
+    const updateCustomer = container.resolve(UpdateCustomerService);
     const customer = await updateCustomer.execute({
       customerId,
       username,
@@ -49,7 +49,7 @@ export class CustomerController {
 
   public async delete(request: Request, response: Response): Promise<Response> {
     const { customerId } = request.params;
-    const deleteCustomer = new DeleteCustomerService();
+    const deleteCustomer = container.resolve(DeleteCustomerService);
     await deleteCustomer.execute({ customerId });
 
     return response.status(200).json([]);
