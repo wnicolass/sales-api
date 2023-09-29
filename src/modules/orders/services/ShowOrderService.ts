@@ -1,7 +1,7 @@
 import { inject, injectable } from 'tsyringe';
-import { IOrder } from '../domain/IOrder';
+import { IOrder } from '../domain/interfaces/IOrder';
 import { AppError } from '@shared/errors/AppError';
-import { IOrderRepository } from '../domain/IOrderRepository';
+import { IOrderRepository } from '../domain/interfaces/IOrderRepository';
 
 interface IOrderRequest {
   orderId: string;

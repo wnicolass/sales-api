@@ -1,10 +1,10 @@
-import { IOrder } from '../domain/IOrder';
-import { AppError } from '@shared/errors/AppError';
-import { IOrderRepository } from '../domain/IOrderRepository';
 import { inject, injectable } from 'tsyringe';
+import { IOrder } from '../domain/interfaces/IOrder';
+import { AppError } from '@shared/errors/AppError';
+import { IOrderRepository } from '../domain/interfaces/IOrderRepository';
 import { IProductRepository } from '@modules/products/domain/IProductRepository';
 import { ICustomerRepository } from '@modules/customers/domain/interfaces/ICustomerRepository';
-import { ICreateOrderRequest } from '../domain/IOrderRequest';
+import { ICreateOrderRequest } from '../domain/interfaces/IOrderRequest';
 
 @injectable()
 export class CreateOrderService {

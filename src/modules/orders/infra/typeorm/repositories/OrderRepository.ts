@@ -1,9 +1,9 @@
 import { Repository, getRepository } from 'typeorm';
 import { Order } from '../entities/Order';
-import { ICreateOrder } from '@modules/orders/domain/ICreateOrder';
-import { IOrderRepository } from '@modules/orders/domain/IOrderRepository';
-import { IOrder } from '@modules/orders/domain/IOrder';
+import { IOrder } from '@modules/orders/domain/interfaces/IOrder';
 import { IPagination } from '@shared/interfaces/IPagination';
+import { ICreateOrder } from '@modules/orders/domain/interfaces/ICreateOrder';
+import { IOrderRepository } from '@modules/orders/domain/interfaces/IOrderRepository';
 import { IPaginationParams } from '@shared/interfaces/IPaginationParams';
 
 export class OrderRepository implements IOrderRepository {
