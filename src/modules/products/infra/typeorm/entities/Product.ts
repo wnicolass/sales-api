@@ -1,5 +1,5 @@
 import { OrderProduct } from '@modules/orders/infra/typeorm/entities/OrderProduct';
-import { IProduct } from '@modules/products/domain/IProduct';
+import { IProduct } from '@modules/products/domain/interfaces/IProduct';
 import {
   Column,
   CreateDateColumn,
