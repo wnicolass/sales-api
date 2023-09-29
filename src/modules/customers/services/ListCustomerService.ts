@@ -1,6 +1,7 @@
 import { inject, injectable } from 'tsyringe';
+import { ICustomer } from '../domain/interfaces/ICustomer';
+import { IPagination } from '@shared/interfaces/IPagination';
 import { ICustomerRepository } from '../domain/interfaces/ICustomerRepository';
-import { ICustomerPagination } from '../domain/interfaces/ICustomerPagination';
 
 interface SearchParams {
   page: number;
@@ -16,7 +17,7 @@ export class ListCustomerService {
   public async execute({
     page,
     limit,
-  }: SearchParams): Promise<ICustomerPagination> {
+  }: SearchParams): Promise<IPagination<ICustomer>> {
     const queryObject = {
       take: limit,
       skip: (+page - 1) * limit,
