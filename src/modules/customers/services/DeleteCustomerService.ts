@@ -1,5 +1,5 @@
 import { injectable, inject } from 'tsyringe';
-import { AppError } from 'dist/shared/errors/AppError';
+import { AppError } from '@shared/errors/AppError';
 import { ICustomerRequest } from '../domain/interfaces/ICustomerRequest';
 import { ICustomerRepository } from '../domain/interfaces/ICustomerRepository';
 
