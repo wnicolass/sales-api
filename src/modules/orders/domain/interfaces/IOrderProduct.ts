@@ -1,5 +1,5 @@
 import { IOrder } from './IOrder';
-import { IProduct } from '@modules/products/domain/IProduct';
+import { IProduct } from '@modules/products/domain/interfaces/IProduct';
 
 export interface IOrderProduct {
   id: string;

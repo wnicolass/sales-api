@@ -1,4 +1,4 @@
-import { IProduct } from '@modules/products/domain/IProduct';
+import { IProduct } from '@modules/products/domain/interfaces/IProduct';
 
 export interface ICreateOrderRequest {
   customerId: string;
