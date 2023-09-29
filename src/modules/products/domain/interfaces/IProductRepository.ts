@@ -1,6 +1,7 @@
 import { IProduct } from './IProduct';
 import { IPagination } from '@shared/interfaces/IPagination';
 import { IPaginationParams } from '@shared/interfaces/IPaginationParams';
+import { ICreateProductRequest } from './ICreateProductRequest';
 
 export interface IUpdateStockProduct {
   product_id: string;
@@ -16,5 +17,6 @@ export interface IProductRepository {
   findByName(name: string): Promise<IProduct | undefined>;
   findAllById(products: IProduct[]): Promise<IProduct[]>;
   save(product: IProduct): Promise<IProduct>;
+  create({ name, price, quantity }: ICreateProductRequest): Promise<IProduct>;
   updateStock(updatedProducts: IUpdateStockProduct[]): Promise<void>;
 }
