@@ -1,4 +1,8 @@
 import { container } from 'tsyringe';
+import { JWTAdapter } from '@modules/users/infra/adapters/JWTAdapter';
+import { IJWTAdapter } from '@modules/users/domain/interfaces/IJWTAdapter';
+import { BcryptAdapter } from '@modules/users/infra/adapters/BcryptAdater';
+import { IBcryptAdapter } from '@modules/users/domain/interfaces/IBcryptAdapter';
 import { UserRepository } from '@modules/users/infra/typeorm/repositories/UserRepository';
 import { OrderRepository } from '@modules/orders/infra/typeorm/repositories/OrderRepository';
 import { IUserRepository } from '@modules/users/domain/interfaces/IUserRepository';
@@ -24,3 +28,5 @@ container.registerSingleton<IUserRepository>(
   'ProductRepository',
   UserRepository,
 );
+container.registerSingleton<IJWTAdapter>('JWTAdapter', JWTAdapter);
+container.registerSingleton<IBcryptAdapter>('BcryptAdapter', BcryptAdapter);
