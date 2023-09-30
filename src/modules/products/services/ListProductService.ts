@@ -21,13 +21,13 @@ export class ListProductsService {
   }: ISearchParams): Promise<IPagination<IProduct>> {
     const redisCache = RedisCacheSingleton.client;
     let products = await redisCache.recover<IProduct[]>('sales-api:products');
-    const queryObject = {
-      take: limit,
-      skip: (+page - 1) * limit,
-      page,
-    };
 
     if (!products) {
+      const queryObject = {
+        take: limit,
+        skip: (+page - 1) * limit,
+        page,
+      };
       const queryResult = await this.productRepository.findAll({
         ...queryObject,
       });
