@@ -1,10 +1,10 @@
 import { Repository, getRepository } from 'typeorm';
 import { User } from '../entities/User';
-import { IUserRepository } from '@modules/users/domain/interfaces/IUserRepository';
-import { ICreateUserRequest } from '@modules/users/domain/interfaces/ICreateUserRequest';
 import { IUser } from '@modules/users/domain/interfaces/IUser';
-import { IPaginationParams } from '@shared/interfaces/IPaginationParams';
 import { IPagination } from '@shared/interfaces/IPagination';
+import { IUserRepository } from '@modules/users/domain/interfaces/IUserRepository';
+import { IPaginationParams } from '@shared/interfaces/IPaginationParams';
+import { ICreateUserRequest } from '@modules/users/domain/interfaces/ICreateUserRequest';
 
 export class UserRepository implements IUserRepository {
   constructor(private ormRepo: Repository<User> = getRepository(User)) {}
