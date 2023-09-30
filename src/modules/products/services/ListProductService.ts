@@ -20,19 +20,26 @@ export class ListProductsService {
     limit,
   }: ISearchParams): Promise<IPagination<IProduct>> {
     const redisCache = RedisCacheSingleton.client;
-    let products =
-      await redisCache.recover<IPagination<IProduct>>('sales-api:products');
+    let products = await redisCache.recover<IProduct[]>('sales-api:products');
+    const queryObject = {
+      take: limit,
+      skip: (+page - 1) * limit,
+      page,
+    };
 
     if (!products) {
-      const queryObject = {
-        take: limit,
-        skip: (+page - 1) * limit,
-        page,
-      };
-      products = await this.productRepository.findAll({ ...queryObject });
+      const queryResult = await this.productRepository.findAll({
+        ...queryObject,
+      });
+      products = queryResult.data;
       await redisCache.save('sales-api:products', products);
     }
 
-    return products;
+    return {
+      per_page: limit,
+      total: products.length,
+      current_page: page,
+      data: products,
+    };
   }
 }
