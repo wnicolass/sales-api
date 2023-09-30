@@ -69,4 +69,8 @@ export class ProductRepository implements IProductRepository {
   ): Promise<void> {
     await this.ormRepo.save(updatedProducts);
   }
+
+  public async remove(product: Product): Promise<void> {
+    await this.ormRepo.remove(product);
+  }
 }

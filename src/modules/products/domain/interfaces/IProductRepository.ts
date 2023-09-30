@@ -19,4 +19,5 @@ export interface IProductRepository {
   save(product: IProduct): Promise<IProduct>;
   create({ name, price, quantity }: ICreateProductRequest): Promise<IProduct>;
   updateStock(updatedProducts: IUpdateStockProduct[]): Promise<void>;
+  remove(product: IProduct): Promise<void>;
 }
