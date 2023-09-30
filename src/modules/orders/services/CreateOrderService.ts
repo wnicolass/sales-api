@@ -2,7 +2,7 @@ import { inject, injectable } from 'tsyringe';
 import { IOrder } from '../domain/interfaces/IOrder';
 import { AppError } from '@shared/errors/AppError';
 import { IOrderRepository } from '../domain/interfaces/IOrderRepository';
-import { IProductRepository } from '@modules/products/domain/IProductRepository';
+import { IProductRepository } from '@modules/products/domain/interfaces/IProductRepository';
 import { ICustomerRepository } from '@modules/customers/domain/interfaces/ICustomerRepository';
 import { ICreateOrderRequest } from '../domain/interfaces/IOrderRequest';
 
