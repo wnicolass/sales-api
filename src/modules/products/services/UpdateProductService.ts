@@ -1,29 +1,30 @@
-import { getCustomRepository } from 'typeorm';
-import { ProductRepository } from '../typeorm/repositories/ProductRepository';
-import { update } from '@shared/typeorm/helpers/update';
-import { Product } from '../typeorm/entities/Product';
+import { inject, injectable } from 'tsyringe';
+import { update } from '@shared/infra/typeorm/helpers/update';
+import { IProduct } from '../domain/interfaces/IProduct';
 import { AppError } from '@shared/errors/AppError';
-import { ShowProductService } from './ShowProductService';
+import { IProductRepository } from '../domain/interfaces/IProductRepository';
 import { RedisCacheSingleton } from '@shared/cache/RedisCache';
+import { IUpdateProductRequest } from '../domain/interfaces/IUpdateProductRequest';
 
-interface IProductRequest {
-  productId: string;
-  name: string;
-  price: number;
-  quantity: number;
-}
-
+@injectable()
 export class UpdateProductService {
+  constructor(
+    @inject('ProductRepository') private productRepository: IProductRepository,
+  ) {}
+
   public async execute({
     productId,
     name,
     price,
     quantity,
-  }: IProductRequest): Promise<Product> {
-    const productRepository = getCustomRepository(ProductRepository);
-    const showProductService = new ShowProductService();
-    const product = await showProductService.execute({ productId });
-    const productAlreadyExists = await productRepository.findByName(name);
+  }: IUpdateProductRequest): Promise<IProduct> {
+    const product = await this.productRepository.findById(productId);
+
+    if (!product) {
+      throw new AppError('Product not found', 404);
+    }
+
+    const productAlreadyExists = await this.productRepository.findByName(name);
     const hasEqualName = product.name === name;
 
     if (productAlreadyExists && !hasEqualName) {
@@ -34,7 +35,7 @@ export class UpdateProductService {
     await redisCache.invalidate('sales-api:products');
 
     const updatedProduct = update(product, { name, price, quantity });
-    await productRepository.save(updatedProduct);
+    await this.productRepository.save(updatedProduct);
 
     return product;
   }
