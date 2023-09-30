@@ -1,40 +1,37 @@
-import { sign } from 'jsonwebtoken';
-import { compare } from 'bcrypt';
-import { getCustomRepository } from 'typeorm';
-import { User } from '../infra/typeorm/entities/User';
+import { inject, injectable } from 'tsyringe';
 import { AppError } from '@shared/errors/AppError';
+import { IJWTAdapter } from '../domain/interfaces/IJWTAdapter';
 import { tokenConfig } from '@config/token';
-import { UserRepository } from '../infra/typeorm/repositories/UserRepository';
+import { IBcryptAdapter } from '../domain/interfaces/IBcryptAdapter';
+import { IUserRepository } from '../domain/interfaces/IUserRepository';
+import { ISessionResponse } from '../domain/interfaces/ISessionResponse';
+import { ICreateSessionRequest } from '../domain/interfaces/ICreateSessionRequest';
 
-interface IUserRequest {
-  email: string;
-  password: string;
-}
-
-interface ISessionResponse {
-  user: User;
-  token: string;
-}
-
+@injectable()
 export class CreateSessionService {
+  constructor(
+    @inject('UserRepository') private userRepository: IUserRepository,
+    @inject('JWTAdapter') private jwt: IJWTAdapter,
+    @inject('BcryptAdapter') private bcrypt: IBcryptAdapter,
+  ) {}
+
   public async execute({
     email,
     password,
-  }: IUserRequest): Promise<ISessionResponse> {
-    const userRepository = getCustomRepository(UserRepository);
-    const user = await userRepository.findByEmail(email);
+  }: ICreateSessionRequest): Promise<ISessionResponse> {
+    const user = await this.userRepository.findByEmail(email);
 
     if (!user) {
       throw new AppError('Wrong email/password combination', 401);
     }
 
-    const passwordsMatch = await compare(password, user.password);
+    const passwordsMatch = await this.bcrypt.compare(password, user.password);
 
     if (!passwordsMatch) {
       throw new AppError('Wrong email/password combination', 401);
     }
 
-    const token = sign({}, tokenConfig.secret, {
+    const token = this.jwt.encode({}, tokenConfig.secret, {
       subject: user.user_id,
       expiresIn: tokenConfig.exp,
     });
