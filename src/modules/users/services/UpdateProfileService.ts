@@ -1,34 +1,32 @@
-import { getCustomRepository } from 'typeorm';
-import { User } from '../infra/typeorm/entities/User';
-import { UserRepository } from '../infra/typeorm/repositories/UserRepository';
-import { AppError } from '@shared/errors/AppError';
-import { compare } from 'bcrypt';
+import { inject, injectable } from 'tsyringe';
+import { IUser } from '../domain/interfaces/IUser';
 import { update } from '@shared/infra/typeorm/helpers/update';
+import { AppError } from '@shared/errors/AppError';
+import { IBcryptAdapter } from '../domain/interfaces/IBcryptAdapter';
+import { IUserRepository } from '../domain/interfaces/IUserRepository';
+import { IUpdateProfileRequest } from '../domain/interfaces/IUpdateProfileRequest';
 
-interface IProfileRequest {
-  userId: string;
-  username?: string;
-  email: string;
-  password?: string;
-  oldPassword?: string;
-}
-
+@injectable()
 export class UpdateProfileService {
+  constructor(
+    @inject('UserRepository') private userRepository: IUserRepository,
+    @inject('BcryptAdapter') private bcrypt: IBcryptAdapter,
+  ) {}
+
   public async execute({
     userId,
     username,
     email,
     password,
     oldPassword,
-  }: IProfileRequest): Promise<User> {
-    const userRepository = getCustomRepository(UserRepository);
-    const user = await userRepository.findById(userId);
+  }: IUpdateProfileRequest): Promise<IUser> {
+    const user = await this.userRepository.findById(userId);
 
     if (!user) {
       throw new AppError('User not found', 404);
     }
 
-    const userByNewEmail = await userRepository.findByEmail(email);
+    const userByNewEmail = await this.userRepository.findByEmail(email);
     const currentUserEmail = userByNewEmail?.email === user.email;
     if (userByNewEmail && !currentUserEmail) {
       throw new AppError('Email is already in use');
@@ -39,14 +37,17 @@ export class UpdateProfileService {
     }
 
     if (password && oldPassword) {
-      const validOldPassword = await compare(oldPassword, user.password);
+      const validOldPassword = await this.bcrypt.compare(
+        oldPassword,
+        user.password,
+      );
 
       if (!validOldPassword) {
         throw new AppError('Old password does not match');
       }
     }
     update(user, { password, username, email });
-    await userRepository.save(user);
+    await this.userRepository.save(user);
 
     return user;
   }
