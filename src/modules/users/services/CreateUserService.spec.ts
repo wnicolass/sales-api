@@ -6,12 +6,12 @@ import { CreateUserService } from './CreateUserService';
 import { FakeUserRepository } from '../domain/repositories/fakes/FakeUserRepository';
 
 describe('Create User Service', () => {
-  let fakeCustomerRepository: IUserRepository;
+  let fakeUserRepository: IUserRepository;
   let sut: CreateUserService;
 
   beforeAll(() => {
-    fakeCustomerRepository = new FakeUserRepository();
-    sut = new CreateUserService(fakeCustomerRepository);
+    fakeUserRepository = new FakeUserRepository();
+    sut = new CreateUserService(fakeUserRepository);
   });
 
   it('should be able to create a new user', async () => {
