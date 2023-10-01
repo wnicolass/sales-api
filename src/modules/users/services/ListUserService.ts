@@ -7,6 +7,7 @@ interface ISearchParams {
   page: number;
   limit: number;
 }
+
 @injectable()
 export class ListUserService {
   constructor(
