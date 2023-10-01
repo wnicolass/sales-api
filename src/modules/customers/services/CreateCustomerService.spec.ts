@@ -1,13 +1,21 @@
 import 'reflect-metadata';
-import { describe, it, expect } from '@jest/globals';
+import { describe, it, expect, beforeAll } from '@jest/globals';
+import { AppError } from '@shared/errors/AppError';
+import { ICustomerRepository } from '../domain/interfaces/ICustomerRepository';
 import { CreateCustomerService } from './CreateCustomerService';
 import { FakeCustomerRepository } from '../domain/repositories/fakes/FakeCustomerRespository';
 
 describe('Create Customer Service', () => {
+  let fakeCustomerRepository: ICustomerRepository;
+  let sut: CreateCustomerService;
+
+  beforeAll(() => {
+    fakeCustomerRepository = new FakeCustomerRepository();
+    sut = new CreateCustomerService(fakeCustomerRepository);
+  });
+
   it('should be able to create a new customer', async () => {
-    const fakeCustomerRepository = new FakeCustomerRepository();
-    const createCustomer = new CreateCustomerService(fakeCustomerRepository);
-    const anyCustomer = await createCustomer.execute({
+    const anyCustomer = await sut.execute({
       username: 'any_username',
       email: 'any_email@gmail.com',
     });
@@ -16,6 +24,11 @@ describe('Create Customer Service', () => {
   });
 
   it('should not be able to create two customers with the same email', async () => {
-    expect(2).toEqual(2);
+    await expect(
+      sut.execute({
+        username: 'any_username',
+        email: 'any_email@gmail.com',
+      }),
+    ).rejects.toBeInstanceOf(AppError);
   });
 });
