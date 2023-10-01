@@ -3,7 +3,7 @@ import { IUser } from '@modules/users/domain/interfaces/IUser';
 import { IPagination } from '@shared/interfaces/IPagination';
 import { IUserRepository } from '@modules/users/domain/interfaces/IUserRepository';
 import { IPaginationParams } from '@shared/interfaces/IPaginationParams';
-import { FakeBcryptAdapter } from './FakeBcryptAdapter';
+import { FakeBcryptAdapter } from '../../../infra/adapters/fakes/FakeBcryptAdapter';
 import { ICreateUserRequest } from '@modules/users/domain/interfaces/ICreateUserRequest';
 
 export class FakeUserRepository implements IUserRepository {
