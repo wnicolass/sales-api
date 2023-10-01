@@ -5,6 +5,7 @@ import { IOrderRepository } from '../domain/interfaces/IOrderRepository';
 import { IProductRepository } from '@modules/products/domain/interfaces/IProductRepository';
 import { ICustomerRepository } from '@modules/customers/domain/interfaces/ICustomerRepository';
 import { ICreateOrderRequest } from '../domain/interfaces/IOrderRequest';
+import { RedisCacheSingleton } from '@shared/cache/RedisCache';
 
 @injectable()
 export class CreateOrderService {
@@ -79,6 +80,8 @@ export class CreateOrderService {
     }));
 
     await this.productRepository.updateStock(productsWithUpdatedQuantity);
+    const redisCache = RedisCacheSingleton.client;
+    await redisCache.invalidate('sales-api:products');
 
     return order;
   }
