@@ -11,7 +11,7 @@ import { ProductRepository } from '@modules/products/infra/typeorm/repositories/
 import { CustomerRepository } from '@modules/customers/infra/typeorm/repositories/CustomerRepository';
 import { IProductRepository } from '@modules/products/domain/interfaces/IProductRepository';
 import { ICustomerRepository } from '@modules/customers/domain/interfaces/ICustomerRepository';
-import { UserTokenRepository } from 'dist/modules/users/typeorm/repositories/UserToken';
+import { UserTokenRepository } from '@modules/users/infra/typeorm/repositories/UserToken';
 import { IUserTokenRepository } from '@modules/users/domain/interfaces/IUserTokenRepository';
 
 container.registerSingleton<ICustomerRepository>(
@@ -26,10 +26,7 @@ container.registerSingleton<IProductRepository>(
   'ProductRepository',
   ProductRepository,
 );
-container.registerSingleton<IUserRepository>(
-  'ProductRepository',
-  UserRepository,
-);
+container.registerSingleton<IUserRepository>('UserRepository', UserRepository);
 container.registerSingleton<IUserTokenRepository>(
   'UserTokenRepository',
   UserTokenRepository,

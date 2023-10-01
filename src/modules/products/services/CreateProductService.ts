@@ -16,8 +16,7 @@ export class CreateProductService {
     price,
     quantity,
   }: ICreateProductRequest): Promise<IProduct> {
-    const productAlreadyExists =
-      !!(await this.productRepository.findByName(name));
+    const productAlreadyExists = await this.productRepository.findByName(name);
 
     if (productAlreadyExists) {
       throw new AppError(`Product with name "${name}", already exists`);
