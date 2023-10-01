@@ -9,6 +9,7 @@ function setupOrdersRouter(): Router {
   const auth = new AuthValidator();
 
   router.use(auth.validate);
+  router.use('/', orderController.index);
   router.get(
     '/:orderId',
     celebrate({
