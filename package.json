@@ -12,6 +12,7 @@
     "typeorm": "tsnd -r tsconfig-paths/register ./node_modules/typeorm/cli.js",
     "build": "babel src --extensions \".js,.ts\" --out-dir dist --copy-files"
   },
+  "types": "./dist/@types/*.d.ts",
   "keywords": [],
   "author": "",
   "license": "ISC",
@@ -23,6 +24,7 @@
     "@babel/plugin-proposal-decorators": "^7.22.15",
     "@babel/preset-env": "^7.22.20",
     "@babel/preset-typescript": "^7.22.15",
+    "@jest/globals": "^29.7.0",
     "@types/bcrypt": "^5.0.0",
     "@types/cors": "^2.8.14",
     "@types/express": "^4.17.17",
