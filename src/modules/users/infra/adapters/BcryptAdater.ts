@@ -7,4 +7,11 @@ export class BcryptAdapter {
   ): Promise<boolean> {
     return bcrypt.compare(incomingPassword, hashedPassword);
   }
+
+  public async hash(
+    password: string,
+    salt: string | number = 10,
+  ): Promise<string> {
+    return bcrypt.hash(password, salt);
+  }
 }
