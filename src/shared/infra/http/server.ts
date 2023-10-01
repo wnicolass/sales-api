@@ -24,7 +24,7 @@ function setupServer(): void {
   app.use(router);
   app.use(errors());
   app.use(errorHandler.handle);
-  app.listen(3333, () => console.log(`🚀 Server listening on port ${PORT}`));
+  app.listen(PORT, () => console.log(`🚀 Server listening on port ${PORT}`));
 }
 
 setupServer();
