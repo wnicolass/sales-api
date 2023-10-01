@@ -7,7 +7,7 @@ import { pagination } from 'typeorm-pagination';
 import router from './routes';
 import errorHandler from '@shared/errors/ErrorHandler';
 import { errors } from 'celebrate';
-import '@shared/typeorm/index';
+import '@shared/infra/typeorm/index';
 import '@shared/container';
 import { multerConfig } from '@config/fileUpload';
 import { rateLimiter } from './middlewares/RateLimiter';
