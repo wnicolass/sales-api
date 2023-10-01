@@ -7,7 +7,7 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
-import { IOrder } from '@modules/orders/domain/IOrder';
+import { IOrder } from '@modules/orders/domain/interfaces/IOrder';
 import { Customer } from '@modules/customers/infra/typeorm/entities/Customer';
 import { OrderProduct } from './OrderProduct';
 

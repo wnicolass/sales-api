@@ -9,7 +9,7 @@ import {
 } from 'typeorm';
 import { Order } from './Order';
 import { Product } from '@modules/products/infra/typeorm/entities/Product';
-import { IOrderProduct } from '@modules/orders/domain/IOrderProduct';
+import { IOrderProduct } from '@modules/orders/domain/interfaces/IOrderProduct';
 
 @Entity('order_product')
 export class OrderProduct implements IOrderProduct {
