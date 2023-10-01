@@ -1,31 +1,31 @@
-import { getCustomRepository } from 'typeorm';
+import { inject, injectable } from 'tsyringe';
+import { IOrder } from '../domain/interfaces/IOrder';
 import { AppError } from '@shared/errors/AppError';
-import { Order } from '../infra/typeorm/entities/Order';
-import { OrderRepository } from '../infra/typeorm/repositories/OrderRepository';
-import { ProductRepository } from '@modules/products/infra/typeorm/repositories/ProductRepository';
-import { ShowCustomerService } from '@modules/customers/services/ShowCustomerService';
+import { IOrderRepository } from '../domain/interfaces/IOrderRepository';
+import { IProductRepository } from '@modules/products/domain/interfaces/IProductRepository';
+import { ICustomerRepository } from '@modules/customers/domain/interfaces/ICustomerRepository';
+import { ICreateOrderRequest } from '../domain/interfaces/IOrderRequest';
+import { RedisCacheSingleton } from '@shared/cache/RedisCache';
 
-interface IProduct {
-  productId: string;
-  quantity: number;
-}
-
-interface IOrderRequest {
-  customerId: string;
-  products: IProduct[];
-}
-
+@injectable()
 export class CreateOrderService {
+  constructor(
+    @inject('OrderRepository') private orderRepository: IOrderRepository,
+    @inject('ProductRepository') private productRepository: IProductRepository,
+    @inject('CustomerRepository')
+    private customerRepository: ICustomerRepository,
+  ) {}
+
   public async execute({
     customerId,
     products,
-  }: IOrderRequest): Promise<Order> {
-    const orderRepository = getCustomRepository(OrderRepository);
-    const showCustomer = new ShowCustomerService();
-    const productRepository = getCustomRepository(ProductRepository);
-    const customer = await showCustomer.execute({ customerId });
+  }: ICreateOrderRequest): Promise<IOrder> {
+    const customer = await this.customerRepository.findById(customerId);
+    const productsFound = await this.productRepository.findAllById(products);
 
-    const productsFound = await productRepository.findAllById(products);
+    if (!customer) {
+      throw new AppError('Customer not found', 404);
+    }
 
     if (!productsFound.length) {
       throw new AppError('The selected products do not exist');
@@ -33,18 +33,18 @@ export class CreateOrderService {
 
     const productsFoundIds = productsFound.map((product) => product.product_id);
     const productsThatDoNotExist = products.filter(
-      (prod) => !productsFoundIds.includes(prod.productId),
+      (prod) => !productsFoundIds.includes(prod.product_id),
     );
 
     if (productsThatDoNotExist.length) {
       throw new AppError(
-        `Could not found a product with the id: ${productsThatDoNotExist[0].productId}`,
+        `Could not found a product with the id: ${productsThatDoNotExist[0].product_id}`,
       );
     }
 
     const productsWithInvalidQuantity = products.filter((incomingProduct) => {
       const [inStockProduct] = productsFound.filter(
-        (inDbProduct) => inDbProduct.product_id === incomingProduct.productId,
+        (inDbProduct) => inDbProduct.product_id === incomingProduct.product_id,
       );
 
       return inStockProduct.quantity < incomingProduct.quantity;
@@ -57,14 +57,14 @@ export class CreateOrderService {
     }
 
     const productsWithPrice = products.map((product) => ({
-      product_id: product.productId,
+      product_id: product.product_id,
       quantity: product.quantity,
-      price: productsFound.filter(
-        (inStockProduct) => inStockProduct.product_id === product.productId,
-      )[0].price,
+      price: productsFound.find(
+        (inStockProduct) => inStockProduct.product_id === product.product_id,
+      )!.price,
     }));
 
-    const order = await orderRepository.createOrder({
+    const order = await this.orderRepository.create({
       customer,
       products: productsWithPrice,
     });
@@ -79,7 +79,9 @@ export class CreateOrderService {
         )!.quantity - orderProduct.quantity,
     }));
 
-    await productRepository.save(productsWithUpdatedQuantity);
+    await this.productRepository.updateStock(productsWithUpdatedQuantity);
+    const redisCache = RedisCacheSingleton.client;
+    await redisCache.invalidate('sales-api:products');
 
     return order;
   }

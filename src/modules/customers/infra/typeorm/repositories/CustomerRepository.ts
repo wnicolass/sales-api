@@ -1,8 +1,10 @@
 import { getRepository, Repository } from 'typeorm';
 import { Customer } from '../entities/Customer';
-import { ICustomerRepository } from '@modules/customers/domain/interfaces/ICustomerRepository';
 import { ICustomer } from '@modules/customers/domain/interfaces/ICustomer';
+import { IPagination } from '@shared/interfaces/IPagination';
 import { ICreateCustomer } from '@modules/customers/domain/interfaces/ICreateCustomer';
+import { IPaginationParams } from '@shared/interfaces/IPaginationParams';
+import { ICustomerRepository } from '@modules/customers/domain/interfaces/ICustomerRepository';
 
 export class CustomerRepository implements ICustomerRepository {
   constructor(
@@ -20,6 +22,25 @@ export class CustomerRepository implements ICustomerRepository {
     return customer;
   }
 
+  public async findAll({
+    page,
+    skip,
+    take,
+  }: IPaginationParams): Promise<IPagination<ICustomer>> {
+    const [customers, count] = await this.ormRepo
+      .createQueryBuilder()
+      .skip(skip)
+      .take(take)
+      .getManyAndCount();
+
+    return {
+      per_page: take,
+      total: count,
+      current_page: page,
+      data: customers,
+    };
+  }
+
   public async findByUsername(username: string): Promise<Customer | undefined> {
     return await this.ormRepo.findOne({ where: { username } });
   }
@@ -30,5 +51,9 @@ export class CustomerRepository implements ICustomerRepository {
 
   public async findByEmail(email: string): Promise<Customer | undefined> {
     return await this.ormRepo.findOne({ where: { email } });
+  }
+
+  public async remove(customer: ICustomer): Promise<void> {
+    await this.ormRepo.remove(customer);
   }
 }

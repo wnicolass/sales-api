@@ -1,29 +1,32 @@
-import { getCustomRepository } from 'typeorm';
+import { inject, injectable } from 'tsyringe';
+import { IUser } from '../domain/interfaces/IUser';
 import { AppError } from '@shared/errors/AppError';
-import { User } from '../infra/typeorm/entities/User';
-import { UserRepository } from '../infra/typeorm/repositories/UserRepository';
+import { IUserRepository } from '../domain/interfaces/IUserRepository';
+import { ICreateUserRequest } from '../domain/interfaces/ICreateUserRequest';
 
-interface IUserRequest {
-  username: string;
-  email: string;
-  password: string;
-}
-
+@injectable()
 export class CreateUserService {
+  constructor(
+    @inject('UserRepository') private userRepository: IUserRepository,
+  ) {}
+
   public async execute({
     username,
     email,
     password,
-  }: IUserRequest): Promise<User> {
-    const userRepository = getCustomRepository(UserRepository);
-    const emailAlreadyExists = !!(await userRepository.findByEmail(email));
+  }: ICreateUserRequest): Promise<IUser> {
+    const emailAlreadyExists = !!(await this.userRepository.findByEmail(email));
 
     if (emailAlreadyExists) {
       throw new AppError(`Email "${email}" already in use`);
     }
 
-    const newUser = userRepository.create({ username, email, password });
-    await userRepository.save(newUser);
+    const newUser = await this.userRepository.create({
+      username,
+      email,
+      password,
+    });
+    await this.userRepository.save(newUser);
 
     return newUser;
   }

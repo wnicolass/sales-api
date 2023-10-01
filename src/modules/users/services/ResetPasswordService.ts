@@ -1,21 +1,24 @@
-import { getCustomRepository } from 'typeorm';
 import { isAfter, addHours } from 'date-fns';
-import { AppError } from '@shared/errors/AppError';
-import { UserRepository } from '../infra/typeorm/repositories/UserRepository';
-import { UserTokenRepository } from '../infra/typeorm/repositories/UserToken';
 import { update } from '@shared/infra/typeorm/helpers/update';
+import { AppError } from '@shared/errors/AppError';
+import { IUserRepository } from '../domain/interfaces/IUserRepository';
+import { inject, injectable } from 'tsyringe';
+import { IUserTokenRepository } from '../domain/interfaces/IUserTokenRepository';
+import { IResetPasswordRequest } from '../domain/interfaces/IResetPasswordRequest';
 
-interface IUserTokenRequest {
-  token: string;
-  password: string;
-}
-
+@injectable()
 export class ResetPasswordService {
-  public async execute({ token, password }: IUserTokenRequest): Promise<void> {
-    const userRepository = getCustomRepository(UserRepository);
-    const userTokenRepository = getCustomRepository(UserTokenRepository);
+  constructor(
+    @inject('UserRepository') private userRepository: IUserRepository,
+    @inject('UserTokenRepository')
+    private userTokenRepository: IUserTokenRepository,
+  ) {}
 
-    const userToken = await userTokenRepository.findByToken(token);
+  public async execute({
+    token,
+    password,
+  }: IResetPasswordRequest): Promise<void> {
+    const userToken = await this.userTokenRepository.findByToken(token);
 
     if (!userToken) {
       throw new AppError('Token not found', 404);
@@ -28,8 +31,8 @@ export class ResetPasswordService {
       throw new AppError('Expired token');
     }
 
-    const user = await userRepository.findById(userToken.user_id);
+    const user = await this.userRepository.findById(userToken.user_id);
     update(user, { password });
-    await userRepository.save(user!);
+    await this.userRepository.save(user!);
   }
 }

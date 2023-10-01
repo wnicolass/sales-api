@@ -1,32 +1,42 @@
-import { EntityRepository, Repository } from 'typeorm';
+import { Repository, getRepository } from 'typeorm';
 import { Order } from '../entities/Order';
-import { Product } from '@modules/products/infra/typeorm/entities/Product';
-import { Customer } from '@modules/customers/infra/typeorm/entities/Customer';
+import { IOrder } from '@modules/orders/domain/interfaces/IOrder';
+import { IPagination } from '@shared/interfaces/IPagination';
+import { ICreateOrder } from '@modules/orders/domain/interfaces/ICreateOrder';
+import { IOrderRepository } from '@modules/orders/domain/interfaces/IOrderRepository';
+import { IPaginationParams } from '@shared/interfaces/IPaginationParams';
 
-type IProduct = Pick<Product, 'product_id' | 'price' | 'quantity'>;
+export class OrderRepository implements IOrderRepository {
+  constructor(private ormRepo: Repository<Order> = getRepository(Order)) {}
 
-interface ICreateOrder {
-  customer: Customer;
-  products: IProduct[];
-}
+  public async create({ customer, products }: ICreateOrder): Promise<IOrder> {
+    const order = this.ormRepo.create({ customer, order_products: products });
+    return await this.ormRepo.save(order);
+  }
 
-@EntityRepository(Order)
-export class OrderRepository extends Repository<Order> {
   public async findById(orderId: string): Promise<Order | undefined> {
-    return await this.findOne(orderId, {
+    return await this.ormRepo.findOne({
+      where: { order_id: orderId },
       relations: ['order_products', 'customer'],
     });
   }
 
-  public async createOrder({
-    customer,
-    products,
-  }: ICreateOrder): Promise<Order> {
-    const order = this.create({
-      customer,
-      order_products: products,
-    });
+  public async findAll({
+    page,
+    skip,
+    take,
+  }: IPaginationParams): Promise<IPagination<IOrder>> {
+    const [orders, count] = await this.ormRepo
+      .createQueryBuilder()
+      .skip(skip)
+      .take(take)
+      .getManyAndCount();
 
-    return await this.save(order);
+    return {
+      per_page: take,
+      total: count,
+      current_page: page,
+      data: orders,
+    };
   }
 }
