@@ -150,3 +150,6 @@ temp/
 
 # db
 ormconfig.json
+
+# docker
+.docker/dbdata
