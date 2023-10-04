@@ -1,13 +1,13 @@
 FROM node:lts-alpine
 
-WORKDIR /app
+RUN apk add --no-cache bash
 
-COPY package*.json ./
+WORKDIR /home/node/app
+
+COPY package*.json /home/node/app/
+
+RUN chown -R node:node /home/node/app
+
 RUN npm install
 
-COPY . .
-RUN npm run build
-
 USER node
-
-EXPOSE 3000

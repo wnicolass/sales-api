@@ -1,5 +1,5 @@
 import { inject, injectable } from 'tsyringe';
-import { AppError } from 'dist/shared/errors/AppError';
+import { AppError } from '@shared/errors/AppError';
 import { IProductRequest } from '../domain/interfaces/IFindProductRequest';
 import { IProductRepository } from '../domain/interfaces/IProductRepository';
 import { RedisCacheSingleton } from '@shared/cache/RedisCache';
