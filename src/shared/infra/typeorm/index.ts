@@ -5,8 +5,11 @@ class DataSourceConfig {
   private env: string | undefined = process.env.NODE_ENV;
 
   public config(): DataSourceOptions {
-    const entitiesPath: string = join(__dirname, 'entities', 'index.ts');
-    const migrationsPath: string = join(__dirname, 'migrations');
+    const entitiesPath: string = join(
+      __dirname,
+      '../../../modules/**/infra/typeorm/entities/*.ts',
+    );
+    const migrationsPath: string = join(__dirname, './migrations/*.ts');
 
     if (this.env === 'test') {
       return {
