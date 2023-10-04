@@ -14,8 +14,8 @@ export interface IProductRepository {
     skip,
     take,
   }: IPaginationParams): Promise<IPagination<IProduct>>;
-  findById(productId: string): Promise<IProduct | undefined>;
-  findByName(name: string): Promise<IProduct | undefined>;
+  findById(productId: string): Promise<IProduct | null>;
+  findByName(name: string): Promise<IProduct | null>;
   findAllById(products: IProduct[]): Promise<IProduct[]>;
   save(product: IProduct): Promise<IProduct>;
   create({ name, price, quantity }: ICreateProductRequest): Promise<IProduct>;
