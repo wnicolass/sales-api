@@ -4,7 +4,7 @@ import { ICreateOrder } from './ICreateOrder';
 import { IPaginationParams } from '@shared/interfaces/IPaginationParams';
 
 export interface IOrderRepository {
-  findById(orderId: string): Promise<IOrder | undefined>;
+  findById(orderId: string): Promise<IOrder | null>;
   findAll({
     page,
     skip,
