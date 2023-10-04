@@ -9,9 +9,9 @@ export interface ICustomerRepository {
     skip,
     take,
   }: IPaginationParams): Promise<IPagination<ICustomer>>;
-  findByEmail(email: string): Promise<ICustomer | undefined>;
-  findByUsername(username: string): Promise<ICustomer | undefined>;
-  findById(customerId: string): Promise<ICustomer | undefined>;
+  findByEmail(email: string): Promise<ICustomer | null>;
+  findByUsername(username: string): Promise<ICustomer | null>;
+  findById(customerId: string): Promise<ICustomer | null>;
   create(data: ICreateCustomer): Promise<ICustomer>;
   save(customer: ICustomer): Promise<ICustomer>;
   remove(customer: ICustomer): Promise<void>;
