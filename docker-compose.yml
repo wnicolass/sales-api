@@ -50,4 +50,4 @@ services:
     command:
       - sh
       - -c
-      - npm run typeorm migration:run && npm run start:dev
+      - npm run typeorm -- -d src/shared/infra/typeorm/index.ts migration:run && npm run start:dev

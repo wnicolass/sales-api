@@ -1,20 +1,23 @@
-import { Repository, getRepository } from 'typeorm';
+import { Repository } from 'typeorm';
 import { Order } from '../entities/Order';
 import { IOrder } from '@modules/orders/domain/interfaces/IOrder';
+import { dataSource } from '@shared/infra/typeorm/index';
 import { IPagination } from '@shared/interfaces/IPagination';
 import { ICreateOrder } from '@modules/orders/domain/interfaces/ICreateOrder';
 import { IOrderRepository } from '@modules/orders/domain/interfaces/IOrderRepository';
 import { IPaginationParams } from '@shared/interfaces/IPaginationParams';
 
 export class OrderRepository implements IOrderRepository {
-  constructor(private ormRepo: Repository<Order> = getRepository(Order)) {}
+  constructor(
+    private ormRepo: Repository<Order> = dataSource.getRepository(Order),
+  ) {}
 
   public async create({ customer, products }: ICreateOrder): Promise<IOrder> {
     const order = this.ormRepo.create({ customer, order_products: products });
     return await this.ormRepo.save(order);
   }
 
-  public async findById(orderId: string): Promise<Order | undefined> {
+  public async findById(orderId: string): Promise<Order | null> {
     return await this.ormRepo.findOne({
       where: { order_id: orderId },
       relations: ['order_products', 'customer'],

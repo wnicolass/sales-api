@@ -1,6 +1,7 @@
-import { In, Repository, getRepository } from 'typeorm';
+import { In, Repository } from 'typeorm';
 import { Product } from '../entities/Product';
 import { IProduct } from '@modules/products/domain/interfaces/IProduct';
+import { dataSource } from '@shared/infra/typeorm';
 import { IPagination } from '@shared/interfaces/IPagination';
 import { IPaginationParams } from '@shared/interfaces/IPaginationParams';
 import { ICreateProductRequest } from '@modules/products/domain/interfaces/ICreateProductRequest';
@@ -10,7 +11,9 @@ import {
 } from '@modules/products/domain/interfaces/IProductRepository';
 
 export class ProductRepository implements IProductRepository {
-  constructor(private ormRepo: Repository<Product> = getRepository(Product)) {}
+  constructor(
+    private ormRepo: Repository<Product> = dataSource.getRepository(Product),
+  ) {}
 
   public async findAll({
     page,
@@ -31,16 +34,12 @@ export class ProductRepository implements IProductRepository {
     };
   }
 
-  public async findById(productId: string): Promise<IProduct | undefined> {
-    return await this.ormRepo.findOne({ where: { product_id: productId } });
+  public async findById(productId: string): Promise<IProduct | null> {
+    return await this.ormRepo.findOneBy({ product_id: productId });
   }
 
-  public async findByName(name: string): Promise<Product | undefined> {
-    return await this.ormRepo.findOne({
-      where: {
-        name,
-      },
-    });
+  public async findByName(name: string): Promise<Product | null> {
+    return await this.ormRepo.findOneBy({ name });
   }
 
   public async findAllById(products: IProduct[]): Promise<Product[]> {

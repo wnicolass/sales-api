@@ -1,13 +1,16 @@
-import { Repository, getRepository } from 'typeorm';
+import { Repository } from 'typeorm';
 import { User } from '../entities/User';
 import { IUser } from '@modules/users/domain/interfaces/IUser';
+import { dataSource } from '@shared/infra/typeorm';
 import { IPagination } from '@shared/interfaces/IPagination';
 import { IUserRepository } from '@modules/users/domain/interfaces/IUserRepository';
 import { IPaginationParams } from '@shared/interfaces/IPaginationParams';
 import { ICreateUserRequest } from '@modules/users/domain/interfaces/ICreateUserRequest';
 
 export class UserRepository implements IUserRepository {
-  constructor(private ormRepo: Repository<User> = getRepository(User)) {}
+  constructor(
+    private ormRepo: Repository<User> = dataSource.getRepository(User),
+  ) {}
 
   public async create({
     username,
@@ -42,15 +45,15 @@ export class UserRepository implements IUserRepository {
     };
   }
 
-  public async findByUsername(username: string): Promise<User | undefined> {
-    return await this.ormRepo.findOne({ where: { username } });
+  public async findByUsername(username: string): Promise<User | null> {
+    return await this.ormRepo.findOneBy({ username });
   }
 
-  public async findById(userId: string): Promise<User | undefined> {
-    return await this.ormRepo.findOne({ where: { user_id: userId } });
+  public async findById(userId: string): Promise<User | null> {
+    return await this.ormRepo.findOneBy({ user_id: userId });
   }
 
-  public async findByEmail(email: string): Promise<User | undefined> {
-    return await this.ormRepo.findOne({ where: { email } });
+  public async findByEmail(email: string): Promise<User | null> {
+    return await this.ormRepo.findOneBy({ email });
   }
 }
