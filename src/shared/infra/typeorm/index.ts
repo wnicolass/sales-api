@@ -1,5 +1,6 @@
 import { join } from 'node:path';
 import { DataSource, DataSourceOptions } from 'typeorm';
+import 'dotenv/config';
 
 class DataSourceConfig {
   private env: string | undefined = process.env.NODE_ENV;
@@ -22,11 +23,11 @@ class DataSourceConfig {
 
     return {
       type: 'postgres',
-      host: 'pgsqldatabase',
+      host: process.env.DATABASE_HOST ?? 'pgsqldatabase',
       port: 5432,
-      username: 'postgres',
-      password: 'docker',
-      database: 'salesapi',
+      username: process.env.DATABASE_USERNAME ?? 'postgres',
+      password: process.env.DATABASE_PASSWORD ?? 'docker',
+      database: process.env.DATABASE_NAME ?? 'salesapi',
       entities: [entitiesPath],
       migrations: [migrationsPath],
     };
